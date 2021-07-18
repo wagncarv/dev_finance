@@ -221,8 +221,8 @@ td.income {
     align-items: center;
     justify-content: center;
 
-    /* opacity: 0; */
-    /* visibility: hidden; */
+    opacity: 0;
+    visibility: hidden;
 }
 
 .modal-overlay.active {
