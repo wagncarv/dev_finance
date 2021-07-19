@@ -101,6 +101,15 @@ const DOM = {
 
 //Funções importantes
 const Utils = {
+
+    formatDate(date){
+        const [ year, month, day ] = date.split(/-/)
+        return `${day}/${month}/${year}`;
+    },
+    formatAmount(value){
+        value = Number(value) * 100
+        return value;
+    },
     formatCurrency(value){
         const signal = Number(value) < 0 ? "-" : "";
 
@@ -127,8 +136,17 @@ const Form = {
             date: Form.date.value
         }
     },
-    formatData(){
-        console.log('format data')
+    formatValues(){
+        let { description, amount, date } = Form.getValues();
+
+        amount = Utils.formatAmount(amount);
+        date = Utils.formatDate(date);
+        
+        return {
+            description,
+            amount,
+            date
+        }
     },
     validateFields(){
         const { description, amount, date } = Form.getValues();
@@ -136,19 +154,24 @@ const Form = {
              throw new Error("Por favor, preencha todos os campos");
         }
     },
+    clearFields(){
+        Form.description.value = "";
+        Form.amount.value = "";
+        Form.date.value = "";
+    },
     submit(event){
         event.preventDefault();
 
         try{
             Form.validateFields();
+            const transaction = Form.formatValues();
+            Transaction.add(transaction);
+            Form.clearFields();
+            Modal.close();
 
         }catch(error){
             alert(error.message);
         }
-
-        Form.validateFields();
-
-        // Form.formatData();
     }
 }
 
