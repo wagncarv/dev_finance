@@ -20,10 +20,16 @@ const transactions = [
 ]
 
 const Transaction = {
+    all: transactions,
+    add(transaction){
+        Transaction.all.push(transaction);
+
+        App.reload();
+    },
     //somar entradas
     incomes(){
         let income = 0;
-        transactions.forEach((transaction) => {
+        Transaction.all.forEach((transaction) => {
             if(transaction.amount > 0){
                 income += transaction.amount
             }
@@ -34,7 +40,7 @@ const Transaction = {
     //somar saídas
     expenses(){
         let expense = 0;
-        transactions.forEach((transaction) => {
+        Transaction.all.forEach((transaction) => {
             if(transaction.amount < 0){
                 expense -= transaction.amount
             }
@@ -85,6 +91,9 @@ const DOM = {
         document
         .getElementById("totalDisplay")
         .innerHTML = Utils.formatCurrency(Transaction.total());
+    },
+    clearTransactions(){
+        DOM.transactionsContainer.innerHTML = "";
     }
 }
 
@@ -105,9 +114,31 @@ const Utils = {
     }
 }
 
-//carregar os valores
-transactions.forEach(transaction => {
-    DOM.addTransaction(transaction);
+//iniciar
+const App = {
+    init(){
+        //carregar os valores
+        Transaction.all.forEach(transaction => {
+            DOM.addTransaction(transaction);
+        })
+
+        DOM.updateBalance();
+        
+    },
+    reload(){
+        DOM.clearTransactions();
+        App.init();
+    }
+}
+
+App.init();
+
+Transaction.add({
+    id: 39,
+    description: "Pomodoro",
+    amount: 20000,
+    date: "31/01/2022"
 })
 
-DOM.updateBalance();
+
+
