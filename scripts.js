@@ -11,19 +11,21 @@ const Modal = {
     }
 } 
 
-//array de valores
-const transactions = [
-    {id: 1, description: 'Luz' , amount: -20087 , date: '23/01/2022'},
-    {id: 2, description: 'Criação de website' , amount: 500012 , date: '30/01/2022'},
-    {id: 3, description: 'Internet' , amount: -20023 , date: '25/01/2022'},
-    {id: 4, description: 'App' , amount: 20000 , date: '29/01/2022'}
-]
-
 const Transaction = {
-    all: transactions,
+    all: [
+        {description: 'Luz' , amount: -20087 , date: '23/01/2022'},
+        {description: 'Criação de website' , amount: 500012 , date: '30/01/2022'},
+        {description: 'Internet' , amount: -20023 , date: '25/01/2022'},
+        {description: 'App' , amount: 20000 , date: '29/01/2022'}
+    ],
     add(transaction){
         Transaction.all.push(transaction);
 
+        App.reload();
+    },
+
+    remove(index){
+        Transaction.all.splice(index, 1);
         App.reload();
     },
     //somar entradas
@@ -114,6 +116,42 @@ const Utils = {
     }
 }
 
+const Form = {
+    description: document.querySelector('input#description'),
+    amount: document.querySelector('input#amount'),
+    date: document.querySelector('input#date'),
+    getValues(){
+        return {
+            description: Form.description.value,
+            amount: Form.amount.value,
+            date: Form.date.value
+        }
+    },
+    formatData(){
+        console.log('format data')
+    },
+    validateFields(){
+        const { description, amount, date } = Form.getValues();
+        if(description.trim() === "" || amount.trim() === "" || date.trim() === "" ){
+             throw new Error("Por favor, preencha todos os campos");
+        }
+    },
+    submit(event){
+        event.preventDefault();
+
+        try{
+            Form.validateFields();
+
+        }catch(error){
+            alert(error.message);
+        }
+
+        Form.validateFields();
+
+        // Form.formatData();
+    }
+}
+
 //iniciar
 const App = {
     init(){
@@ -132,13 +170,6 @@ const App = {
 }
 
 App.init();
-
-Transaction.add({
-    id: 39,
-    description: "Pomodoro",
-    amount: 20000,
-    date: "31/01/2022"
-})
 
 
 
